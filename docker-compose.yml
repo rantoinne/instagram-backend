@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  personal-instagram-mysql:
+    container_name: personal-instagram-mysql
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: instagram
+    ports:
+      - 3306:3306
+    volumes:
+      - ./personal-instagram-mysql:/var/lib/mysql:cached
+    working_dir: /var/lib/mysql
+
+  personal-instagram-node:
+    container_name: personal-instagram-node
+    image: node:14
+    volumes:
+      - ./:/usr/src/personal-instagram-node:cached
+      - ./node_modules:/usr/src/personal-instagram-node/node_modules:cached
+    working_dir: /usr/src/personal-instagram-node
+    command: bash -c "
+      yarn &&
+      yarn back:watch:server &
+      echo 'Backend starting on port 8000' &&
+      tail -f /dev/null"
+    ports:
+      - 8000:8000
+    environment:
+      - MYSQL_DB=mysql://root:root@personal-instagram-mysql:3306/instagram
+      - REDIS_DB_HOST=personal-instagram-mysql
+    links:
+      - personal-instagram-mysql

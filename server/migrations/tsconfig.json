@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "../../migrations",
+    "sourceMap": false,
+    "module": "commonjs",
+    "target": "ES2018",
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"],
+    "lib": [
+      "es2020"
+    ]
+  },
+  "include": [
+    "./**/*"
+  ]
+}
